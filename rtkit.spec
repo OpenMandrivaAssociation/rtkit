@@ -1,5 +1,5 @@
 Name:          rtkit
-Version:       0.2
+Version:       0.3
 Release:       %mkrel 1
 Summary:       Realtime Policy and Watchdog Daemon
 Group:         System/Libraries
@@ -13,7 +13,6 @@ BuildRequires: dbus-devel >= 1.2
 BuildRequires: libcap-devel
 BuildRequires: polkit-devel
 Source0:       http://0pointer.de/public/%{name}-%{version}.tar.gz
-Patch0:        rtkit-0.2-linking.patch
 
 %description
 RealtimeKit is a D-Bus system service that changes the
@@ -24,7 +23,6 @@ processes.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 autoreconf
