@@ -1,6 +1,6 @@
 Name:          rtkit
-Version:       0.3
-Release:       %mkrel 2
+Version:       0.4
+Release:       %mkrel 1
 Summary:       Realtime Policy and Watchdog Daemon
 Group:         System/Libraries
 # The daemon itself is GPLv3+, the reference implementation for the client BSD
