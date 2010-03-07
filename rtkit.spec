@@ -1,9 +1,8 @@
 Name:          rtkit
-Version:       0.5
+Version:       0.6
 Release:       %mkrel 1
 Summary:       Realtime Policy and Watchdog Daemon
 Group:         System/Libraries
-# The daemon itself is GPLv3+, the reference implementation for the client BSD
 License:       GPLv3+ and BSD
 URL:           http://git.0pointer.de/?p=rtkit.git
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -34,7 +33,7 @@ rm -rf %{buildroot}
 install -D org.freedesktop.RealtimeKit1.xml %{buildroot}/%{_datadir}/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
 
 %clean
-rm -rf %{buildroot}
+rm -rf $RPM_BUILD_ROOT
 
 %pre
 %_pre_useradd rtkit /proc /sbin/nologin
