@@ -1,5 +1,5 @@
 Name:          rtkit
-Version:       0.6
+Version:       0.7
 Release:       %mkrel 1
 Summary:       Realtime Policy and Watchdog Daemon
 Group:         System/Libraries
@@ -52,4 +52,5 @@ dbus-send --system --type=method_call --dest=org.freedesktop.DBus / org.freedesk
 %{_datadir}/dbus-1/system-services/org.freedesktop.RealtimeKit1.service
 %{_datadir}/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
 %{_datadir}/polkit-1/actions/org.freedesktop.RealtimeKit1.policy
+%{_mandir}/man*/rtkitctl.*
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf
