@@ -1,5 +1,5 @@
 Name:          rtkit
-Version:       0.7
+Version:       0.8
 Release:       %mkrel 1
 Summary:       Realtime Policy and Watchdog Daemon
 Group:         System/Libraries
