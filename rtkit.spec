@@ -10,7 +10,7 @@ URL:           http://git.0pointer.de/?p=rtkit.git
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires:      polkit >= 0.93
 BuildRequires: dbus-devel >= 1.2
-BuildRequires: libcap-devel
+BuildRequires: cap-devel
 BuildRequires: polkit-1-devel
 %if %{_with_systemd}
 BuildRequires:  systemd-units
