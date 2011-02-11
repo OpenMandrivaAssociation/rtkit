@@ -2,7 +2,7 @@
 
 Name:          rtkit
 Version:       0.9
-Release:       %mkrel 1
+Release:       %mkrel 2
 Summary:       Realtime Policy and Watchdog Daemon
 Group:         System/Libraries
 License:       GPLv3+ and BSD
