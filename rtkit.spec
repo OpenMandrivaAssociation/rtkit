@@ -1,23 +1,21 @@
 %define _with_systemd 1
 
-Name:          rtkit
-Version:       0.9
-Release:       %mkrel 3
-Summary:       Realtime Policy and Watchdog Daemon
-Group:         System/Libraries
-License:       GPLv3+ and BSD
-URL:           http://git.0pointer.de/?p=rtkit.git
-BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Requires:      polkit >= 0.93
-BuildRequires: dbus-devel >= 1.2
-BuildRequires: cap-devel
-BuildRequires: polkit-1-devel
+Name:		rtkit
+Version:	0.10
+Release:	%mkrel 1
+Summary:	Realtime Policy and Watchdog Daemon
+Group:		System/Libraries
+License:	GPLv3+ and BSD
+URL:		http://git.0pointer.de/?p=rtkit.git
+Source0:	http://0pointer.de/public/%{name}-%{version}.tar.gz
+Requires:	polkit >= 0.93
+BuildRequires:	dbus-devel >= 1.2
+BuildRequires:	cap-devel
+BuildRequires:	polkit-1-devel
 %if %{_with_systemd}
-BuildRequires:  systemd-units
+BuildRequires:	systemd-units
 %endif
-Source0:       http://0pointer.de/public/%{name}-%{version}.tar.gz
-# (bor) fix systemd unit (GIT)
-Patch0:		rtkit-0.9-systemd-fix.patch
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 RealtimeKit is a D-Bus system service that changes the
@@ -28,12 +26,11 @@ processes.
 
 %prep
 %setup -q
-%apply_patches
 
 %build
 %configure2_5x \
 %if !%{_with_systemd}
-	--without-systemdsystemunitdir 
+	--without-systemdsystemunitdir
 %endif
 
 %make
@@ -45,7 +42,7 @@ rm -rf %{buildroot}
 install -D org.freedesktop.RealtimeKit1.xml %{buildroot}/%{_datadir}/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %pre
 %_pre_useradd rtkit /proc /sbin/nologin
