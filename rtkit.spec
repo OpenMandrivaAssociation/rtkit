@@ -7,7 +7,7 @@ Summary:	Realtime Policy and Watchdog Daemon
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 URL:		http://git.0pointer.de/?p=rtkit.git
-Source0:	http://0pointer.de/public/%{name}-%{version}.tar.gz
+Source0:	http://0pointer.de/public/%{name}-%{version}.tar.xz
 Requires:	polkit >= 0.93
 Requires(pre):	setup
 Requires(post,postun): setup
