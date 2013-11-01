@@ -1,3 +1,5 @@
+%global		_with_systemd	1
+
 Name:		rtkit
 Version:	0.11
 Release:	7
