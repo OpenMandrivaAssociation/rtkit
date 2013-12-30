@@ -1,5 +1,3 @@
-%global		_with_systemd	1
-
 Name:		rtkit
 Version:	0.11
 Release:	11
@@ -28,9 +26,7 @@ processes.
 
 %build
 %configure2_5x \
-%if !%{_with_systemd}
-	--without-systemdsystemunitdir
-%endif
+	--with-systemdsystemunitdir=%{_unitdir}
 
 %make
 ./rtkit-daemon --introspect > org.freedesktop.RealtimeKit1.xml
