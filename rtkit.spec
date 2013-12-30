@@ -42,11 +42,13 @@ install -D org.freedesktop.RealtimeKit1.xml %{buildroot}/%{_datadir}/dbus-1/inte
 %pre
 %_pre_useradd rtkit /proc /sbin/nologin
 
-%postun
-%_postun_userdel rtkit
-
 %post
 dbus-send --system --type=method_call --dest=org.freedesktop.DBus / org.freedesktop.DBus.ReloadConfig >/dev/null 2>&1 || :
+%systemd_post rtkit-daemon.service
+
+%postun
+%_postun_userdel rtkit
+%systemd_postun rtkit-daemon.service
 
 %files
 %doc README rtkit.c rtkit.h
