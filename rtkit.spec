@@ -1,16 +1,15 @@
+Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.11
 Release:	11
-Summary:	Realtime Policy and Watchdog Daemon
 Group:		System/Libraries
 License:	GPLv3+ and BSD
-URL:		http://git.0pointer.de/?p=rtkit.git
+Url:		http://git.0pointer.de/?p=rtkit.git
 Source0:	http://0pointer.de/public/%{name}-%{version}.tar.xz
 Requires:	polkit >= 0.93
-Requires(pre):	setup
-Requires(post,postun): setup
-BuildRequires:	pkgconfig(dbus-1)
+Requires(pre,post,postun):	setup
 BuildRequires:	cap-devel
+BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(polkit-gobject-1)
 BuildRequires:	pkgconfig(systemd)
 
@@ -56,5 +55,4 @@ dbus-send --system --type=method_call --dest=org.freedesktop.DBus / org.freedesk
 %{_mandir}/man*/rtkitctl.*
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf
 %{_unitdir}/rtkit-daemon.service
-
 
