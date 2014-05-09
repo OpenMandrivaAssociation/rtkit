@@ -1,11 +1,12 @@
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.11
-Release:	11
+Release:	12
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		http://git.0pointer.de/?p=rtkit.git
 Source0:	http://0pointer.de/public/%{name}-%{version}.tar.xz
+Patch1:		rtkit-0.11-systemd205.patch
 Requires:	polkit >= 0.93
 Requires(pre,post,postun):	setup
 BuildRequires:	cap-devel
@@ -22,6 +23,7 @@ processes.
 
 %prep
 %setup -q
+%apply_patches
 
 %build
 %configure2_5x \
