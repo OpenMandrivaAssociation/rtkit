@@ -6,6 +6,7 @@ Group:		System/Libraries
 License:	GPLv3+ and BSD
 URL:		http://git.0pointer.de/?p=rtkit.git
 Source0:	http://0pointer.de/public/%{name}-%{version}.tar.xz
+Patch1:		rtkit-0.11-systemd205.patch
 Requires:	polkit >= 0.93
 Requires(pre):	setup
 Requires(post,postun): setup
@@ -23,6 +24,7 @@ processes.
 
 %prep
 %setup -q
+%apply_patches
 
 %build
 %configure2_5x \
