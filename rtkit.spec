@@ -1,7 +1,7 @@
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.11
-Release:	12
+Release:	13
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		http://git.0pointer.de/?p=rtkit.git
