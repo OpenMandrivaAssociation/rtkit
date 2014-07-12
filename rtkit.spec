@@ -1,7 +1,7 @@
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.11
-Release:	14
+Release:	15
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		http://git.0pointer.de/?p=rtkit.git
@@ -26,7 +26,7 @@ processes.
 %apply_patches
 
 %build
-%configure2_5x \
+%configure \
 	--with-systemdsystemunitdir=%{_unitdir}
 
 %make
@@ -57,4 +57,3 @@ dbus-send --system --type=method_call --dest=org.freedesktop.DBus / org.freedesk
 %{_mandir}/man*/rtkitctl.*
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf
 %{_unitdir}/rtkit-daemon.service
-
