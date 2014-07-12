@@ -1,6 +1,6 @@
 Name:		rtkit
 Version:	0.11
-Release:	12
+Release:	12.1
 Summary:	Realtime Policy and Watchdog Daemon
 Group:		System/Libraries
 License:	GPLv3+ and BSD
