@@ -1,14 +1,19 @@
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.11
-Release:	17
+Release:	18
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		http://git.0pointer.de/?p=rtkit.git
 Source0:	http://0pointer.de/public/%{name}-%{version}.tar.xz
-Patch1:		rtkit-0.11-systemd205.patch
+Patch1:		rtkit-controlgroup.patch
+# (tpg) patches from upstream http://git.0pointer.net/rtkit.git/
+Patch100:	0000-Pass-uid-of-caller-to-polkit.patch
+Patch101:	0001-build-sys-since-clock_gettime-moved-to-libc-use-mq_o.patch
+Patch102:	0002-systemd-update-sd-daemon.-ch.patch
+
 Requires:	polkit >= 0.93
-Requires(pre,post,postun):	setup
+Requires(pre,post,postun):	rpm-helper
 BuildRequires:	cap-devel
 BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(polkit-gobject-1)
@@ -36,16 +41,16 @@ processes.
 %makeinstall_std
 install -D org.freedesktop.RealtimeKit1.xml %{buildroot}/%{_datadir}/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
 
+install -d %{buildroot}%{_presetdir}
+cat > %{buildroot}%{_presetdir}/86-rtkit.preset << EOF
+enable rtkit-daemon.service
+EOF
+
 %pre
 %_pre_useradd rtkit /proc /sbin/nologin
 
-%post
-dbus-send --system --type=method_call --dest=org.freedesktop.DBus / org.freedesktop.DBus.ReloadConfig >/dev/null 2>&1 || :
-%systemd_post rtkit-daemon.service
-
 %postun
 %_postun_userdel rtkit
-%systemd_postun rtkit-daemon.service
 
 %files
 %doc README rtkit.c rtkit.h
@@ -56,4 +61,5 @@ dbus-send --system --type=method_call --dest=org.freedesktop.DBus / org.freedesk
 %{_datadir}/polkit-1/actions/org.freedesktop.RealtimeKit1.policy
 %{_mandir}/man*/rtkitctl.*
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf
+%{_presetdir}/86-rtkit.preset
 %{_unitdir}/rtkit-daemon.service
