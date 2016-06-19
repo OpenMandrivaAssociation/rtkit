@@ -1,0 +1,26 @@
+From d550837387e4185ebcde1023702580e35eb441e7 Mon Sep 17 00:00:00 2001
+From: Lennart Poettering <lennart@poettering.net>
+Date: Thu, 26 Sep 2013 21:52:58 +0200
+Subject: [PATCH 1/2] build-sys: since clock_gettime() moved to libc use
+ mq_open to check for librt
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 5a77363..62c17f5 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -111,7 +111,7 @@ CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+ CC="$PTHREAD_CC"
+ 
+ AC_SEARCH_LIBS([sched_setscheduler], [rt])
+-AC_SEARCH_LIBS([clock_gettime], [rt])
++AC_SEARCH_LIBS([mq_open], [rt])
+ AC_SEARCH_LIBS([cap_init], [cap])
+ 
+ PKG_CHECK_MODULES(DBUS, dbus-1)
+-- 
+1.9.5
+
