@@ -1,12 +1,16 @@
 Name:		rtkit
 Version:	0.11
-Release:	12.1
+Release:	12.2
 Summary:	Realtime Policy and Watchdog Daemon
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 URL:		http://git.0pointer.de/?p=rtkit.git
 Source0:	http://0pointer.de/public/%{name}-%{version}.tar.xz
-Patch1:		rtkit-0.11-systemd205.patch
+Patch1:		rtkit-controlgroup.patch
+# (tpg) patches from upstream http://git.0pointer.net/rtkit.git/
+Patch100:	0000-Pass-uid-of-caller-to-polkit.patch
+Patch101:	0001-build-sys-since-clock_gettime-moved-to-libc-use-mq_o.patch
+Patch102:	0002-systemd-update-sd-daemon.-ch.patch
 Requires:	polkit >= 0.93
 Requires(pre):	setup
 Requires(post,postun): setup
@@ -25,6 +29,7 @@ processes.
 %prep
 %setup -q
 %apply_patches
+autoreconf -fiv
 
 %build
 %configure2_5x \
@@ -58,5 +63,3 @@ dbus-send --system --type=method_call --dest=org.freedesktop.DBus / org.freedesk
 %{_mandir}/man*/rtkitctl.*
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf
 %{_unitdir}/rtkit-daemon.service
-
-
