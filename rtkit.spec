@@ -1,23 +1,19 @@
+%define snap 20161228
+
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.11
-Release:	18
+Release:	19.%{snap}.1
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		http://git.0pointer.de/?p=rtkit.git
-Source0:	http://0pointer.de/public/%{name}-%{version}.tar.xz
-Patch1:		rtkit-controlgroup.patch
-# (tpg) patches from upstream http://git.0pointer.net/rtkit.git/
-Patch100:	0000-Pass-uid-of-caller-to-polkit.patch
-Patch101:	0001-build-sys-since-clock_gettime-moved-to-libc-use-mq_o.patch
-Patch102:	0002-systemd-update-sd-daemon.-ch.patch
-
+Source0:	http://0pointer.de/public/%{name}-%{version}-%{snap}.tar.xz
 Requires:	polkit >= 0.93
 Requires(pre,post,postun):	rpm-helper
 BuildRequires:	cap-devel
 BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(polkit-gobject-1)
-BuildRequires:	pkgconfig(systemd)
+BuildRequires:	pkgconfig(libsystemd)
 
 %description
 RealtimeKit is a D-Bus system service that changes the
@@ -29,6 +25,7 @@ processes.
 %prep
 %setup -q
 %apply_patches
+./autogen.sh
 
 %build
 %configure \
