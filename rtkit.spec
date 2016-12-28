@@ -10,10 +10,10 @@ Url:		http://git.0pointer.de/?p=rtkit.git
 Source0:	http://0pointer.de/public/%{name}-%{version}-%{snap}.tar.xz
 Requires:	polkit >= 0.93
 Requires(pre,post,postun):	rpm-helper
-#BuildRequires:	cap-devel
-#BuildRequires:	pkgconfig(dbus-1)
-#BuildRequires:	pkgconfig(polkit-gobject-1)
-#BuildRequires:	pkgconfig(libsystemd)
+BuildRequires:	cap-devel
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(polkit-gobject-1)
+BuildRequires:	pkgconfig(libsystemd)
 
 %description
 RealtimeKit is a D-Bus system service that changes the
