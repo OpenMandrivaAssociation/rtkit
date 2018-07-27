@@ -1,9 +1,10 @@
+%define Werror_cflags %{nil}
 %define snap 20161228
 
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.11
-Release:	19.%{snap}.2
+Release:	19.%{snap}.3
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		http://git.0pointer.de/?p=rtkit.git
