@@ -4,12 +4,13 @@
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.11
-Release:	19.%{snap}.3
+Release:	19.%{snap}.4
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		http://git.0pointer.de/?p=rtkit.git
 Source0:	http://0pointer.de/public/%{name}-%{version}-%{snap}.tar.xz
 Requires:	polkit >= 0.93
+BuildRequires:	rpm-helper
 Requires(pre,post,postun):	rpm-helper
 BuildRequires:	cap-devel
 BuildRequires:	pkgconfig(dbus-1)
