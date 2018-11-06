@@ -16,6 +16,7 @@ BuildRequires:	cap-devel
 BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(polkit-gobject-1)
 BuildRequires:	pkgconfig(libsystemd)
+BuildRequires:	systemd-macros
 
 %description
 RealtimeKit is a D-Bus system service that changes the
@@ -31,7 +32,7 @@ processes.
 
 %build
 %configure \
-	--with-systemdsystemunitdir=%{_systemunitdir}
+	--with-systemdsystemunitdir=%{_unitdir}
 
 %make
 ./rtkit-daemon --introspect > org.freedesktop.RealtimeKit1.xml
