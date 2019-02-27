@@ -1,22 +1,22 @@
 %define Werror_cflags %{nil}
-%define snap 20161228
+%define snap 20190227
 
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.11
-Release:	19.%{snap}.5
+Release:	19.%{snap}.6
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		http://git.0pointer.de/?p=rtkit.git
 Source0:	http://0pointer.de/public/%{name}-%{version}-%{snap}.tar.xz
-Requires:	polkit >= 0.93
 BuildRequires:	rpm-helper
-Requires(pre,post,postun):	rpm-helper
 BuildRequires:	cap-devel
 BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(polkit-gobject-1)
 BuildRequires:	pkgconfig(libsystemd)
 BuildRequires:	systemd-macros
+Requires(pre,post,postun):	rpm-helper
+Requires:	polkit >= 0.93
 
 %description
 RealtimeKit is a D-Bus system service that changes the
@@ -26,19 +26,18 @@ mechanism to allow real-time scheduling to be used by normal user
 processes.
 
 %prep
-%setup -q
-%apply_patches
+%autosetup -n %{name}-%{version}-%{snap} -p1
 ./autogen.sh
 
 %build
 %configure \
 	--with-systemdsystemunitdir=%{_unitdir}
 
-%make
+%make_build
 ./rtkit-daemon --introspect > org.freedesktop.RealtimeKit1.xml
 
 %install
-%makeinstall_std
+%make_install
 install -D org.freedesktop.RealtimeKit1.xml %{buildroot}/%{_datadir}/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
 
 install -d %{buildroot}%{_presetdir}
