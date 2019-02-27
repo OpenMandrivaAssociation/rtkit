@@ -59,6 +59,6 @@ EOF
 %{_datadir}/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
 %{_datadir}/polkit-1/actions/org.freedesktop.RealtimeKit1.policy
 %{_mandir}/man*/rtkitctl.*
-%{_sysconfdir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf
+%{_datadir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf
 %{_presetdir}/86-rtkit.preset
 %{_unitdir}/rtkit-daemon.service
