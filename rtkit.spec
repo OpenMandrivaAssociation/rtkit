@@ -62,3 +62,5 @@ EOF
 %{_datadir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf
 %{_presetdir}/86-rtkit.preset
 %{_unitdir}/rtkit-daemon.service
+%dir %{_libexecdir}/installed-tests/rtkit
+%{_libexecdir}/installed-tests/rtkit/rtkit-test
