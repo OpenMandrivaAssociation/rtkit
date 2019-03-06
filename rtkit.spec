@@ -26,7 +26,6 @@ processes.
 
 %prep
 %autosetup -p1
-./autogen.sh
 
 %build
 %configure \
