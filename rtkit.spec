@@ -1,14 +1,13 @@
 %define Werror_cflags %{nil}
-%define snap 20190227
 
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
-Version:	0.11
-Release:	19.%{snap}.6
+Version:	0.12
+Release:	1
 Group:		System/Libraries
 License:	GPLv3+ and BSD
-Url:		http://git.0pointer.de/?p=rtkit.git
-Source0:	http://0pointer.de/public/%{name}-%{version}-%{snap}.tar.xz
+Url:		https://github.com/heftig/rtkit
+Source0:	https://github.com/heftig/rtkit/releases/download/v%{version}/%{name}-%{version}.tar.xz
 BuildRequires:	rpm-helper
 BuildRequires:	cap-devel
 BuildRequires:	pkgconfig(dbus-1)
@@ -26,7 +25,7 @@ mechanism to allow real-time scheduling to be used by normal user
 processes.
 
 %prep
-%autosetup -n %{name}-%{version}-%{snap} -p1
+%autosetup -p1
 ./autogen.sh
 
 %build
