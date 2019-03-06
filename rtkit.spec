@@ -14,6 +14,7 @@ BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(polkit-gobject-1)
 BuildRequires:	pkgconfig(libsystemd)
 BuildRequires:	systemd-macros
+BuildRequires:	kernel-headers
 Requires(pre,post,postun):	rpm-helper
 Requires:	polkit >= 0.93
 
