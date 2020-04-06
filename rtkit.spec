@@ -16,6 +16,7 @@ BuildRequires:	pkgconfig(polkit-gobject-1)
 BuildRequires:	pkgconfig(libsystemd)
 BuildRequires:	systemd-macros
 BuildRequires:	kernel-release-headers
+BuildRequires:	vim-common
 Requires(pre,post,postun):	rpm-helper
 Requires:	polkit >= 0.93
 
