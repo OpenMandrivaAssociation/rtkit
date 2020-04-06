@@ -2,12 +2,13 @@
 
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
-Version:	0.12
+Version:	0.13
 Release:	1
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		https://github.com/heftig/rtkit
 Source0:	https://github.com/heftig/rtkit/releases/download/v%{version}/%{name}-%{version}.tar.xz
+BuildRequires:	meson
 BuildRequires:	rpm-helper
 BuildRequires:	cap-devel
 BuildRequires:	pkgconfig(dbus-1)
@@ -29,15 +30,14 @@ processes.
 %autosetup -p1
 
 %build
-%configure \
-	--with-systemdsystemunitdir=%{_unitdir}
+%meson \
+	-Dinstalled_tests=false \
+	-Dsystemd_systemunitdir=%{_unitdir}
 
 %make_build
-./rtkit-daemon --introspect > org.freedesktop.RealtimeKit1.xml
 
 %install
 %make_install
-install -D org.freedesktop.RealtimeKit1.xml %{buildroot}/%{_datadir}/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
 
 install -d %{buildroot}%{_presetdir}
 cat > %{buildroot}%{_presetdir}/86-rtkit.preset << EOF
