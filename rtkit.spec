@@ -9,7 +9,6 @@ License:	GPLv3+ and BSD
 Url:		https://github.com/heftig/rtkit
 Source0:	https://github.com/heftig/rtkit/releases/download/v%{version}/%{name}-%{version}.tar.xz
 BuildRequires:	meson
-BuildRequires:	ninja
 BuildRequires:	rpm-helper
 BuildRequires:	cap-devel
 BuildRequires:	pkgconfig(dbus-1)
@@ -34,13 +33,12 @@ processes.
 %build
 %meson \
 	-Dinstalled_tests=false \
-	-Dsystemd_systemunitdir=%{_unitdir} \
-	-G Ninja
+	-Dsystemd_systemunitdir=%{_unitdir}
 
-%ninja_build
+%meson_build
 
 %install
-%ninja_install
+%meson_install
 
 install -d %{buildroot}%{_presetdir}
 cat > %{buildroot}%{_presetdir}/86-rtkit.preset << EOF
