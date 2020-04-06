@@ -53,7 +53,7 @@ EOF
 
 %files
 %doc README rtkit.c rtkit.h
-%attr(0755,root,root) %{_sbindir}/rtkitctl
+%attr(0755,root,root) %{_bindir}/rtkitctl
 %attr(0755,root,root) %{_libexecdir}/rtkit-daemon
 %{_datadir}/dbus-1/system-services/org.freedesktop.RealtimeKit1.service
 %{_datadir}/dbus-1/interfaces/org.freedesktop.RealtimeKit1.xml
@@ -62,5 +62,3 @@ EOF
 %{_datadir}/dbus-1/system.d/org.freedesktop.RealtimeKit1.conf
 %{_presetdir}/86-rtkit.preset
 %{_unitdir}/rtkit-daemon.service
-%dir %{_libexecdir}/installed-tests/rtkit
-%{_libexecdir}/installed-tests/rtkit/rtkit-test
