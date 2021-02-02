@@ -3,7 +3,7 @@
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.13
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		https://github.com/heftig/rtkit
@@ -48,9 +48,17 @@ EOF
 %pre
 %_pre_useradd rtkit /proc /sbin/nologin
 
-%postun
-%_postun_userdel rtkit
+%post
+%systemd_post rtkit-daemon.service
+dbus-send --system --type=method_call --dest=org.freedesktop.DBus / org.freedesktop.DBus.ReloadConfig >/dev/null 2>&1 || :
 
+%preun
+%systemd_preun rtkit-daemon.service
+
+%postun
+%systemd_postun_with_restart rtkit-daemon.service
+
+%_postun_userdel rtkit
 %files
 %doc README rtkit.c rtkit.h
 %attr(0755,root,root) %{_bindir}/rtkitctl
