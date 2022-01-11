@@ -14,7 +14,7 @@ BuildRequires:	cap-devel
 BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(polkit-gobject-1)
 BuildRequires:	pkgconfig(libsystemd)
-BuildRequires:	systemd-macros
+BuildRequires:	systemd-rpm-macros
 BuildRequires:	kernel-release-headers
 BuildRequires:	vim-common
 Requires:	polkit >= 0.93
