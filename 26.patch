@@ -1,0 +1,220 @@
+From 1b5ebe1e36ec0301e9e4d147e0fb7869bc5a5d18 Mon Sep 17 00:00:00 2001
+From: KogasaPls <kogasapls@gmail.com>
+Date: Fri, 14 Jan 2022 16:44:03 -0600
+Subject: [PATCH 1/2] Add --quiet flag to suppress spamming logs. Suppresses
+ "Supervising n threads...", "Successfully made thread RT", and "Successfully
+ demoted thread" messages.
+
+---
+ rtkit-daemon.c | 50 +++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 33 insertions(+), 17 deletions(-)
+
+diff --git a/rtkit-daemon.c b/rtkit-daemon.c
+index 17122fa..5f31058 100644
+--- a/rtkit-daemon.c
++++ b/rtkit-daemon.c
+@@ -154,6 +154,9 @@ static bool canary_demote_unknown = FALSE;
+ /* Log to stderr? */
+ static bool log_stderr = FALSE;
+ 
++/* Suppress logging common status changes? */
++static bool log_quiet = TRUE;
++
+ /* Scheduling policy to use */
+ static int sched_policy = SCHED_RR;
+ 
+@@ -765,12 +768,14 @@ static int process_set_realtime(struct rtkit_user *u, struct process *p, struct
+                 thread_reset(t->pid);
+                 goto finish;
+         }
++	if (!log_quiet) {
++		syslog(LOG_INFO, "Successfully made thread %llu of process %llu owned by '%s' RT at priority %u.\n",
++		       (unsigned long long) t->pid,
++		       (unsigned long long) p->pid,
++		       get_user_name(u->uid, user, sizeof(user)),
++		       priority);
++	}
+ 
+-        syslog(LOG_INFO, "Successfully made thread %llu of process %llu owned by '%s' RT at priority %u.\n",
+-               (unsigned long long) t->pid,
+-               (unsigned long long) p->pid,
+-               get_user_name(u->uid, user, sizeof(user)),
+-               priority);
+ 
+         r = 0;
+ 
+@@ -829,11 +834,13 @@ static int process_set_high_priority(struct rtkit_user *u, struct process *p, st
+                 goto finish;
+         }
+ 
+-        syslog(LOG_INFO, "Successfully made thread %llu of process %llu owned by '%s' high priority at nice level %i.\n",
+-               (unsigned long long) t->pid,
+-               (unsigned long long) p->pid,
+-               get_user_name(u->uid, user, sizeof(user)),
+-               priority);
++        if (!log_quiet) {
++		syslog(LOG_INFO, "Successfully made thread %llu of process %llu owned by '%s' high priority at nice level %i.\n",
++		       (unsigned long long) t->pid,
++		       (unsigned long long) p->pid,
++		       get_user_name(u->uid, user, sizeof(user)),
++		       priority);
++	}
+ 
+         r = 0;
+ 
+@@ -857,7 +864,7 @@ static void reset_known(void) {
+                                 if (verify_process_user(u, p) >= 0 &&
+                                     verify_process_starttime(p) >= 0 &&
+                                     verify_thread_starttime(p, t) >= 0)
+-                                        if (thread_reset(t->pid) >= 0) {
++                                        if (thread_reset(t->pid) >= 0 && !log_quiet) {
+                                                 syslog(LOG_NOTICE, "Successfully demoted thread %llu of process %llu.\n",
+                                                        (unsigned long long) t->pid,
+                                                        (unsigned long long) p->pid);
+@@ -951,7 +958,7 @@ static int reset_all(void) {
+ 
+                         if (r == SCHED_FIFO || r == SCHED_RR ||
+                             r == (SCHED_FIFO|SCHED_RESET_ON_FORK) || r == (SCHED_RR|SCHED_RESET_ON_FORK))
+-                                if (thread_reset((pid_t) tid) >= 0) {
++                                if (thread_reset((pid_t) tid) >= 0 && !log_quiet) {
+                                         syslog(LOG_NOTICE, "Successfully demoted thread %llu of process %llu.\n",
+                                                (unsigned long long) tid,
+                                                (unsigned long long) pid);
+@@ -1432,10 +1439,12 @@ static DBusHandlerResult dbus_handler(DBusConnection *c, DBusMessage *m, void *u
+         } else
+                 return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+ 
+-        syslog(LOG_DEBUG, "Supervising %u threads of %u processes of %u users.\n",
+-                n_total_threads,
+-                n_total_processes,
+-                n_users);
++        if (!log_quiet) {
++		syslog(LOG_DEBUG, "Supervising %u threads of %u processes of %u users.\n",
++		        n_total_threads,
++		        n_total_processes,
++		        n_users);
++	}
+ 
+ #ifdef HAVE_LIBSYSTEMD
+         sd_notifyf(0,
+@@ -1875,6 +1884,7 @@ enum {
+         ARG_CANARY_DEMOTE_ROOT,
+         ARG_CANARY_DEMOTE_UNKNOWN,
+         ARG_CANARY_REFUSE_SEC,
++        ARG_QUIET,
+         ARG_STDERR,
+         ARG_INTROSPECT
+ };
+@@ -1905,6 +1915,7 @@ static const struct option long_options[] = {
+     { "canary-demote-unknown",       no_argument,       0, ARG_CANARY_DEMOTE_UNKNOWN },
+     { "canary-refuse-sec",           required_argument, 0, ARG_CANARY_REFUSE_SEC },
+     { "stderr",                      no_argument,       0, ARG_STDERR },
++    { "quiet",                       no_argument,       0, ARG_QUIET },
+     { "introspect",                  no_argument,       0, ARG_INTROSPECT },
+     { NULL, 0, 0, 0}
+ };
+@@ -1960,7 +1971,8 @@ static void show_help(const char *exe) {
+                "      --no-canary                     Don't run a canary-based RT watchdog\n\n"
+                "      --no-drop-privileges            Don't drop privileges\n"
+                "      --no-chroot                     Don't chroot\n"
+-               "      --no-limit-resources            Don't limit daemon's resources\n",
++               "      --no-limit-resources            Don't limit daemon's resources\n"
++               "      --quiet                         Don't log common status changes\n",
+                exe,
+                username,
+                sp_names[sched_policy],
+@@ -2222,6 +2234,10 @@ static int parse_command_line(int argc, char *argv[], int *ret) {
+                                 log_stderr = TRUE;
+                                 break;
+ 
++                        case ARG_QUIET:
++                                log_quiet = TRUE;
++                                break;
++
+                         case ARG_INTROSPECT:
+                                 fputs(introspect_xml, stdout);
+                                 *ret = 0;
+
+From 0704e9417aed5d7a21d479a585003976a9590e9a Mon Sep 17 00:00:00 2001
+From: KogasaPls <kogasapls@gmail.com>
+Date: Fri, 14 Jan 2022 16:54:16 -0600
+Subject: [PATCH 2/2] Fix whitespace/clean up diff
+
+---
+ rtkit-daemon.c | 42 ++++++++++++++++++++++--------------------
+ 1 file changed, 22 insertions(+), 20 deletions(-)
+
+diff --git a/rtkit-daemon.c b/rtkit-daemon.c
+index 5f31058..8c640b9 100644
+--- a/rtkit-daemon.c
++++ b/rtkit-daemon.c
+@@ -768,13 +768,14 @@ static int process_set_realtime(struct rtkit_user *u, struct process *p, struct
+                 thread_reset(t->pid);
+                 goto finish;
+         }
+-	if (!log_quiet) {
+-		syslog(LOG_INFO, "Successfully made thread %llu of process %llu owned by '%s' RT at priority %u.\n",
+-		       (unsigned long long) t->pid,
+-		       (unsigned long long) p->pid,
+-		       get_user_name(u->uid, user, sizeof(user)),
+-		       priority);
+-	}
++
++        if (!log_quiet) {
++                syslog(LOG_INFO, "Successfully made thread %llu of process %llu owned by '%s' RT at priority %u.\n",
++                       (unsigned long long) t->pid,
++                       (unsigned long long) p->pid,
++                       get_user_name(u->uid, user, sizeof(user)),
++                       priority);
++        }
+ 
+ 
+         r = 0;
+@@ -835,12 +836,12 @@ static int process_set_high_priority(struct rtkit_user *u, struct process *p, st
+         }
+ 
+         if (!log_quiet) {
+-		syslog(LOG_INFO, "Successfully made thread %llu of process %llu owned by '%s' high priority at nice level %i.\n",
+-		       (unsigned long long) t->pid,
+-		       (unsigned long long) p->pid,
+-		       get_user_name(u->uid, user, sizeof(user)),
+-		       priority);
+-	}
++                syslog(LOG_INFO, "Successfully made thread %llu of process %llu owned by '%s' high priority at nice level %i.\n",
++                        (unsigned long long) t->pid,
++                        (unsigned long long) p->pid,
++                        get_user_name(u->uid, user, sizeof(user)),
++                        priority);
++        }
+ 
+         r = 0;
+ 
+@@ -1440,11 +1441,11 @@ static DBusHandlerResult dbus_handler(DBusConnection *c, DBusMessage *m, void *u
+                 return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+ 
+         if (!log_quiet) {
+-		syslog(LOG_DEBUG, "Supervising %u threads of %u processes of %u users.\n",
+-		        n_total_threads,
+-		        n_total_processes,
+-		        n_users);
+-	}
++                syslog(LOG_DEBUG, "Supervising %u threads of %u processes of %u users.\n",
++                        n_total_threads,
++                        n_total_processes,
++                        n_users);
++        }
+ 
+ #ifdef HAVE_LIBSYSTEMD
+         sd_notifyf(0,
+@@ -1971,8 +1972,9 @@ static void show_help(const char *exe) {
+                "      --no-canary                     Don't run a canary-based RT watchdog\n\n"
+                "      --no-drop-privileges            Don't drop privileges\n"
+                "      --no-chroot                     Don't chroot\n"
+-               "      --no-limit-resources            Don't limit daemon's resources\n"
+-               "      --quiet                         Don't log common status changes\n",
++               "      --quiet                         Don't log common status changes\n"
++               "      --no-limit-resources            Don't limit daemon's resources\n",
++
+                exe,
+                username,
+                sp_names[sched_policy],
