@@ -3,7 +3,7 @@
 Summary:	Realtime Policy and Watchdog Daemon
 Name:		rtkit
 Version:	0.13
-Release:	5
+Release:	6
 Group:		System/Libraries
 License:	GPLv3+ and BSD
 Url:		https://github.com/heftig/rtkit
